@@ -71,13 +71,21 @@ function ChatContent() {
     try {
       const res = await getPercakapan();
       const list = Array.isArray(res) ? res : [];
-      setConversations(list);
+      setConversations((prev) => {
+        // Percakapan yang sedang aktif dibuka di layar harus tetap 0 pesan belum dibaca
+        return list.map((item) => {
+          if (selectedUserId && Number(item.lawan_id) === Number(selectedUserId)) {
+            return { ...item, belum_dibaca: 0 };
+          }
+          return item;
+        });
+      });
       return list;
     } catch (err) {
       setConversationsError(err.message || "Gagal memuat percakapan");
       return [];
     }
-  }, []);
+  }, [selectedUserId]);
 
   // Initial load
   useEffect(() => {
@@ -170,6 +178,22 @@ function ChatContent() {
             foto: list[0].lawan_foto || null,
           });
         }
+        // Set unread count = 0 for the actively opened conversation on start
+        const activeId = targetUserParam
+          ? parseInt(targetUserParam, 10)
+          : list.length > 0
+          ? list[0].lawan_id
+          : null;
+
+        if (activeId) {
+          setConversations((prev) =>
+            prev.map((c) =>
+              Number(c.lawan_id) === Number(activeId)
+                ? { ...c, belum_dibaca: 0 }
+                : c
+            )
+          );
+        }
       } catch (err) {
         if (isMounted) {
           setConversationsError(err.message || "Gagal memuat data awal");
@@ -238,6 +262,10 @@ function ChatContent() {
         if (!isPolling || isNearBottomRef.current) {
           setTimeout(() => scrollToBottom(false), 50);
         }
+
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("notifikasi:berubah"));
+        }
       } catch (err) {
         if (!isPolling) {
           setMessagesError(err.message || "Gagal memuat riwayat pesan");
@@ -294,6 +322,13 @@ function ChatContent() {
   function handleSelectConversation(userId) {
     if (userId === selectedUserId) return;
     setSelectedUserId(userId);
+
+    // Langsung set hitungan belum dibaca = 0 saat room chat dibuka
+    setConversations((prev) =>
+      prev.map((c) =>
+        Number(c.lawan_id) === Number(userId) ? { ...c, belum_dibaca: 0 } : c
+      )
+    );
 
     const found = conversations.find((c) => Number(c.lawan_id) === Number(userId));
     if (found) {

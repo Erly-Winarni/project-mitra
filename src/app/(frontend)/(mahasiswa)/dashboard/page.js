@@ -165,25 +165,22 @@ export default function DashboardPage() {
       }
     }
 
-    // 5. Pesan Belum Dibaca
-    let totalUnread = "-";
-    if (pesanRes.status === "fulfilled" || notifRes.status === "fulfilled") {
-      let unreadMessages = 0;
-      if (pesanRes.status === "fulfilled" && Array.isArray(pesanRes.value)) {
-        unreadMessages = pesanRes.value.reduce(
+    // 5. Pesan Belum Dibaca (Khusus menghitung pesan percakapan tim yang belum dibaca)
+    let unreadMessages = "-";
+    let unreadDesc = "Semua obrolan telah dibaca";
+    if (pesanRes.status === "fulfilled") {
+      let count = 0;
+      if (Array.isArray(pesanRes.value)) {
+        count = pesanRes.value.reduce(
           (sum, c) => sum + (Number(c.belum_dibaca) || 0),
           0
         );
       }
-
-      let unreadNotifs = 0;
-      if (notifRes.status === "fulfilled") {
-        unreadNotifs =
-          notifRes.value?.meta?.unread_count ??
-          (Array.isArray(notifRes.value) ? notifRes.value.length : 0);
-      }
-
-      totalUnread = unreadMessages + unreadNotifs;
+      unreadMessages = count;
+      unreadDesc =
+        count > 0
+          ? `${count} pesan obrolan baru belum dibaca`
+          : "Semua pesan obrolan telah dibaca";
     }
 
     // Set stats summary cards
@@ -194,8 +191,8 @@ export default function DashboardPage() {
       skillDesc: descTags,
       lamaranCount: pendingTotal,
       lamaranDesc: pendingDesc,
-      pesanCount: totalUnread,
-      pesanDesc: "Dari obrolan tim & notifikasi sistem",
+      pesanCount: unreadMessages,
+      pesanDesc: unreadDesc,
     });
     setLoadingCards(false);
 

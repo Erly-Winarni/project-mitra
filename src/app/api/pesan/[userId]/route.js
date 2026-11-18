@@ -57,6 +57,12 @@ export const GET = route(async ({ req, user, params }) => {
     'UPDATE pesan SET is_read = TRUE WHERE pengirim_id = $1 AND penerima_id = $2 AND NOT is_read',
     [lawan, user.pengguna_id]
   );
+  await query(
+    `UPDATE notifikasi SET is_read = TRUE 
+     WHERE pengguna_id = $1 AND tipe = 'pesan' AND NOT is_read 
+       AND (isi ILIKE (SELECT '%' || nama || '%' FROM pengguna WHERE pengguna_id = $2))`,
+    [user.pengguna_id, lawan]
+  );
   const { rows } = await query(
     `SELECT * FROM (
        SELECT pesan_id, pengirim_id, penerima_id, isi_pesan, sent_at, is_read FROM pesan
