@@ -11,6 +11,7 @@ CREATE TABLE pengguna (
   is_verified BOOLEAN NOT NULL DEFAULT FALSE,
   ketersediaan_waktu VARCHAR(100),
   profil_publik BOOLEAN NOT NULL DEFAULT TRUE,
+  foto TEXT,
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 CREATE TABLE tag (

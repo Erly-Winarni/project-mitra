@@ -11,6 +11,7 @@ const schema = z
     angkatan: z.number().int().min(2000).max(new Date().getFullYear() + 1).nullable(),
     ketersediaan_waktu: z.string().max(100),
     profil_publik: z.boolean(),
+    foto: z.string().nullable().optional(),
     // skill & minat; jika dikirim, menggantikan seluruh tag lama
     tags: z.array(z.object({
       tag_id: z.number().int().positive(),

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getNotifikasi } from "@/lib/frontend/api/mahasiswa";
 import { useMahasiswa } from "@/components/mahasiswa/MahasiswaGuard";
-import { getInitials } from "@/lib/frontend/utils/format";
+import { getInitials, getStoredProfilePhoto } from "@/lib/frontend/utils/format";
 
 export default function MahasiswaTopbar() {
   const router = useRouter();
@@ -16,10 +16,13 @@ export default function MahasiswaTopbar() {
 
   useEffect(() => {
     function updatePhoto() {
-      if (typeof window !== "undefined" && (user?.nim || user?.pengguna_id)) {
+      if (typeof window !== "undefined") {
         try {
-          const photo = localStorage.getItem(`profile_photo_${user.nim || user.pengguna_id}`);
-          setProfilePhoto(photo || "");
+          const photo =
+            getStoredProfilePhoto(user?.pengguna_id, user?.nim) ||
+            localStorage.getItem("profile_photo_me") ||
+            "";
+          setProfilePhoto(photo);
         } catch {
           // ignore
         }

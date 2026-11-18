@@ -48,7 +48,7 @@ const schema = z.object({
 export const GET = route(async ({ user }) => {
   const { rows } = await query(
     `SELECT * FROM (
-       SELECT DISTINCT ON (x.lawan_id) x.lawan_id, u.nama AS lawan_nama, u.jurusan, u.angkatan,
+       SELECT DISTINCT ON (x.lawan_id) x.lawan_id, u.nama AS lawan_nama, u.jurusan, u.angkatan, u.foto AS lawan_foto,
               x.pengirim_id, x.isi_pesan, x.sent_at,
               (SELECT COUNT(*)::int FROM pesan m
                 WHERE m.pengirim_id = x.lawan_id AND m.penerima_id = $1 AND NOT m.is_read) AS belum_dibaca

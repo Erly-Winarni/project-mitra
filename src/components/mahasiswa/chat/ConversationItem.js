@@ -1,6 +1,11 @@
 "use client";
 
-import { getInitials, formatChatTimestamp } from "@/lib/frontend/utils/format";
+import { useEffect, useState } from "react";
+import {
+  getInitials,
+  formatChatTimestamp,
+  getStoredProfilePhoto,
+} from "@/lib/frontend/utils/format";
 
 const CONVERSATION_PALETTES = [
   { bg: "bg-primary-container", text: "text-on-primary" },
@@ -20,9 +25,32 @@ export default function ConversationItem({
   currentUserId,
   onClick,
 }) {
+  const [photo, setPhoto] = useState("");
+
+  useEffect(() => {
+    function updatePhoto() {
+      if (conversation?.lawan_id) {
+        const p = getStoredProfilePhoto(
+          conversation.lawan_id,
+          conversation.lawan_nim
+        );
+        setPhoto(p);
+      } else {
+        setPhoto("");
+      }
+    }
+
+    updatePhoto();
+    window.addEventListener("foto_profil:berubah", updatePhoto);
+    return () => {
+      window.removeEventListener("foto_profil:berubah", updatePhoto);
+    };
+  }, [conversation?.lawan_id, conversation?.lawan_nim]);
+
   const initials = getInitials(conversation.lawan_nama);
   const palette = getAvatarPalette(conversation.lawan_id);
   const formattedTime = formatChatTimestamp(conversation.sent_at);
+  const displayPhoto = conversation?.lawan_foto || photo;
 
   const isFromMe =
     conversation.pengirim_id != null &&
@@ -45,9 +73,18 @@ export default function ConversationItem({
         <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary rounded-l-[3rem]" />
         <div className="relative shrink-0 ml-1">
           <div
-            className={`w-12 h-12 rounded-full ${palette.bg} ${palette.text} text-title-lg font-bold flex items-center justify-center shadow-inner`}
+            className={`w-12 h-12 rounded-full ${palette.bg} ${palette.text} text-title-lg font-bold flex items-center justify-center shadow-inner overflow-hidden`}
           >
-            {initials}
+            {displayPhoto ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={displayPhoto}
+                alt={conversation.lawan_nama || "Profil"}
+                className="w-full h-full object-cover rounded-full"
+              />
+            ) : (
+              initials
+            )}
           </div>
         </div>
 
@@ -90,9 +127,18 @@ export default function ConversationItem({
     >
       <div className="relative shrink-0 ml-1">
         <div
-          className={`w-12 h-12 rounded-full ${palette.bg} ${palette.text} text-title-lg font-bold flex items-center justify-center`}
+          className={`w-12 h-12 rounded-full ${palette.bg} ${palette.text} text-title-lg font-bold flex items-center justify-center overflow-hidden`}
         >
-          {initials}
+          {displayPhoto ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={displayPhoto}
+              alt={conversation.lawan_nama || "Profil"}
+              className="w-full h-full object-cover rounded-full"
+            />
+          ) : (
+            initials
+          )}
         </div>
       </div>
 

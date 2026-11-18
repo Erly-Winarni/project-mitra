@@ -13,6 +13,7 @@ import {
   getRiwayatPesan,
   getProfilPengguna,
   kirimPesan,
+  updateMahasiswaProfil,
 } from "@/lib/frontend/api/mahasiswa";
 
 function ChatContent() {
@@ -94,6 +95,17 @@ function ChatContent() {
         if (!isMounted) return;
         setCurrentUser(userRes || null);
 
+        if (typeof window !== "undefined" && userRes) {
+          const localPhoto =
+            (userRes.pengguna_id && localStorage.getItem(`profile_photo_${userRes.pengguna_id}`)) ||
+            (userRes.nim && localStorage.getItem(`profile_photo_${userRes.nim}`)) ||
+            localStorage.getItem("profile_photo_me") ||
+            "";
+          if (localPhoto && !userRes.foto) {
+            updateMahasiswaProfil({ foto: localPhoto }).catch(() => {});
+          }
+        }
+
         // Check if query param exists
         if (targetUserParam) {
           const targetId = parseInt(targetUserParam, 10);
@@ -105,6 +117,8 @@ function ChatContent() {
                 pengguna_id: targetId,
                 nama: found.lawan_nama,
                 jurusan: found.jurusan || null,
+                angkatan: found.angkatan || null,
+                foto: found.lawan_foto || null,
               });
             } else {
               // Fetch user profile if not in current conversation list
@@ -116,6 +130,7 @@ function ChatContent() {
                   lawan_nama: p.nama,
                   jurusan: p.jurusan || null,
                   angkatan: p.angkatan || null,
+                  lawan_foto: p.foto || null,
                   isi_pesan: "",
                   sent_at: new Date().toISOString(),
                   belum_dibaca: 0,
@@ -127,6 +142,7 @@ function ChatContent() {
                   nama: p.nama,
                   jurusan: p.jurusan || null,
                   angkatan: p.angkatan || null,
+                  foto: p.foto || null,
                 });
               } catch {
                 // If profile fails, default to first conversation if available
@@ -136,6 +152,8 @@ function ChatContent() {
                     pengguna_id: list[0].lawan_id,
                     nama: list[0].lawan_nama,
                     jurusan: list[0].jurusan || null,
+                    angkatan: list[0].angkatan || null,
+                    foto: list[0].lawan_foto || null,
                   });
                 }
               }
@@ -148,6 +166,8 @@ function ChatContent() {
             pengguna_id: list[0].lawan_id,
             nama: list[0].lawan_nama,
             jurusan: list[0].jurusan || null,
+            angkatan: list[0].angkatan || null,
+            foto: list[0].lawan_foto || null,
           });
         }
       } catch (err) {
@@ -282,6 +302,7 @@ function ChatContent() {
         nama: found.lawan_nama,
         jurusan: found.jurusan || null,
         angkatan: found.angkatan || null,
+        foto: found.lawan_foto || null,
       });
     }
 

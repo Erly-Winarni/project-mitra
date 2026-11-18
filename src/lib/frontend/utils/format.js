@@ -221,3 +221,20 @@ export function formatNotificationTime(dateStr) {
   }).format(d);
 }
 
+export function getStoredProfilePhoto(id, nim) {
+  if (typeof window === "undefined") return "";
+  try {
+    if (id) {
+      const byId = localStorage.getItem(`profile_photo_${id}`);
+      if (byId) return byId;
+    }
+    if (nim) {
+      const byNim = localStorage.getItem(`profile_photo_${nim}`);
+      if (byNim) return byNim;
+    }
+    return "";
+  } catch {
+    return "";
+  }
+}
+

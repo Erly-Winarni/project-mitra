@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   getInitials,
   formatMessageTime,
   formatChatDayDivider,
+  getStoredProfilePhoto,
 } from "@/lib/frontend/utils/format";
 
 function getLocalDateKey(dateStr) {
@@ -24,6 +26,27 @@ export default function MessageList({
   onRetry,
   hasConversations = true,
 }) {
+  const [recipientPhoto, setRecipientPhoto] = useState("");
+
+  useEffect(() => {
+    const id = recipient?.pengguna_id;
+    const nim = recipient?.nim;
+
+    function updatePhoto() {
+      if (id || nim) {
+        const p = getStoredProfilePhoto(id, nim);
+        setRecipientPhoto(p);
+      } else {
+        setRecipientPhoto("");
+      }
+    }
+
+    updatePhoto();
+    window.addEventListener("foto_profil:berubah", updatePhoto);
+    return () => {
+      window.removeEventListener("foto_profil:berubah", updatePhoto);
+    };
+  }, [recipient?.pengguna_id, recipient?.nim]);
   if (!recipient) {
     if (hasConversations) {
       return (
@@ -67,6 +90,7 @@ export default function MessageList({
   }
 
   const recipientInitials = getInitials(recipient.nama);
+  const displayRecipientPhoto = recipient?.foto || recipientPhoto;
 
   return (
     <div
@@ -118,8 +142,17 @@ export default function MessageList({
                 }`}
               >
                 {!isContinuation && (
-                  <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary text-label-md font-bold flex items-center justify-center shrink-0 mb-1">
-                    {recipientInitials}
+                  <div className="w-8 h-8 rounded-full bg-primary-container text-on-primary text-label-md font-bold flex items-center justify-center shrink-0 mb-1 overflow-hidden shadow-xs">
+                    {displayRecipientPhoto ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={displayRecipientPhoto}
+                        alt={recipient.nama || "Profil"}
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      recipientInitials
+                    )}
                   </div>
                 )}
                 <div className="flex flex-col gap-1 items-start">

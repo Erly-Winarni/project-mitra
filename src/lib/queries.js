@@ -14,7 +14,7 @@ export const slotTerisi = (col) =>
 export async function getProfilLengkap(id) {
   const { rows } = await query(
     `SELECT p.pengguna_id, p.nim, p.nama, p.email, p.jurusan, p.angkatan, p.role, p.is_verified,
-            p.ketersediaan_waktu, p.profil_publik, p.created_at, ${tagsPengguna('p.pengguna_id')} AS tags
+            p.ketersediaan_waktu, p.profil_publik, p.foto, p.created_at, ${tagsPengguna('p.pengguna_id')} AS tags
      FROM pengguna p WHERE p.pengguna_id = $1`,
     [id]
   );

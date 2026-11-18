@@ -59,10 +59,17 @@ export default function ProfilPage() {
 
     if (profilRes.status === "fulfilled" && profilRes.value) {
       const p = profilRes.value;
-      let savedPhoto = "";
-      if (typeof window !== "undefined" && (p.nim || p.pengguna_id)) {
+      let savedPhoto = p.foto || "";
+      if (!savedPhoto && typeof window !== "undefined") {
         try {
-          savedPhoto = localStorage.getItem(`profile_photo_${p.nim || p.pengguna_id}`) || "";
+          savedPhoto =
+            (p.pengguna_id && localStorage.getItem(`profile_photo_${p.pengguna_id}`)) ||
+            (p.nim && localStorage.getItem(`profile_photo_${p.nim}`)) ||
+            localStorage.getItem("profile_photo_me") ||
+            "";
+          if (savedPhoto && !p.foto) {
+            updateMahasiswaProfil({ foto: savedPhoto }).catch(() => {});
+          }
         } catch {
           // ignore error
         }
@@ -180,6 +187,7 @@ export default function ProfilPage() {
         angkatan: formData.angkatan ? Number(formData.angkatan) : null,
         ketersediaan_waktu: formData.ketersediaan_waktu ? formData.ketersediaan_waktu.trim() : "",
         profil_publik: formData.profil_publik,
+        foto: formData.foto || null,
         tags: selectedTags.map((t) => ({
           tag_id: t.tag_id,
           level: t.level || "menengah",
@@ -198,13 +206,16 @@ export default function ProfilPage() {
         }));
       }
 
-      if (typeof window !== "undefined" && (formData.nim || user?.pengguna_id)) {
-        const photoKey = `profile_photo_${formData.nim || user?.pengguna_id}`;
+      if (typeof window !== "undefined") {
         try {
           if (formData.foto) {
-            localStorage.setItem(photoKey, formData.foto);
+            if (formData.nim) localStorage.setItem(`profile_photo_${formData.nim}`, formData.foto);
+            if (user?.pengguna_id) localStorage.setItem(`profile_photo_${user.pengguna_id}`, formData.foto);
+            localStorage.setItem("profile_photo_me", formData.foto);
           } else {
-            localStorage.removeItem(photoKey);
+            if (formData.nim) localStorage.removeItem(`profile_photo_${formData.nim}`);
+            if (user?.pengguna_id) localStorage.removeItem(`profile_photo_${user.pengguna_id}`);
+            localStorage.removeItem("profile_photo_me");
           }
           window.dispatchEvent(new Event("foto_profil:berubah"));
         } catch {
