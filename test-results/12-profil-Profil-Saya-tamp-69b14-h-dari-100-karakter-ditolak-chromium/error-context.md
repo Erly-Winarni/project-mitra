@@ -1,0 +1,161 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: 12-profil.spec.js >> Profil Saya (tampilan) >> ketersediaan waktu lebih dari 100 karakter ditolak
+- Location: tests\12-profil.spec.js:75:3
+
+# Error details
+
+```
+Error: apiRequestContext.dispose: EBUSY: resource busy or locked, open 'C:\Users\GL65\Downloads\Project Mitra PPL\project-mitra\test-results\.playwright-artifacts-5\traces\03111b28ac68dd1abb65-a54df793e12598fffc57-recording97.network'
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=f1e1]:
+  - generic [ref=f1e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=f1e7]
+    - generic [ref=f1e11]:
+      - button "Open issues overlay" [ref=f1e12]:
+        - generic [ref=f1e13]:
+          - generic [aria-hidden] [ref=f1e14]: "0"
+          - generic [ref=f1e15]: "1"
+        - generic [ref=f1e16]: Insight
+      - button "Collapse issues badge" [ref=f1e17]
+  - alert [ref=f1e20]
+  - complementary [ref=f1e21]:
+    - generic [ref=f1e22]:
+      - generic [ref=f1e23]:
+        - generic [ref=f1e24]: hub
+        - generic [ref=f1e26]:
+          - generic [ref=f1e27]: SkillMatch
+          - generic [ref=f1e28]: Campus Hub
+      - navigation [ref=f1e29]:
+        - link "dashboard Dashboard" [ref=f1e30] [cursor=pointer]:
+          - /url: /dashboard
+          - generic [ref=f1e31]: dashboard
+          - generic [ref=f1e32]: Dashboard
+        - link "person Profil Saya" [ref=f1e33] [cursor=pointer]:
+          - /url: /profil
+          - generic [ref=f1e34]: person
+          - generic [ref=f1e35]: Profil Saya
+        - link "explore Cari Proyek" [ref=f1e36] [cursor=pointer]:
+          - /url: /proyek
+          - generic [ref=f1e37]: explore
+          - generic [ref=f1e38]: Cari Proyek
+        - link "folder Proyek Saya" [ref=f1e39] [cursor=pointer]:
+          - /url: /proyek-saya
+          - generic [ref=f1e40]: folder
+          - generic [ref=f1e41]: Proyek Saya
+        - link "groups Proyek Tergabung" [ref=f1e42] [cursor=pointer]:
+          - /url: /proyek-tergabung
+          - generic [ref=f1e43]: groups
+          - generic [ref=f1e44]: Proyek Tergabung
+        - link "chat_bubble Chat" [ref=f1e45] [cursor=pointer]:
+          - /url: /chat
+          - generic [ref=f1e46]: chat_bubble
+          - generic [ref=f1e47]: Chat
+        - link "notifications Notifikasi" [ref=f1e48] [cursor=pointer]:
+          - /url: /notifikasi
+          - generic [ref=f1e49]: notifications
+          - generic [ref=f1e50]: Notifikasi
+    - button "logout Keluar" [ref=f1e52]:
+      - generic [ref=f1e53]: logout
+      - generic [ref=f1e54]: Keluar
+  - generic [ref=f1e55]:
+    - banner [ref=f1e56]:
+      - generic [ref=f1e57]: Universitas Hasanuddin
+      - generic [ref=f1e59]:
+        - search [ref=f1e60]:
+          - generic: search
+          - searchbox "Cari proyek" [ref=f1e61]
+        - link "notifications" [ref=f1e62] [cursor=pointer]:
+          - /url: /notifikasi
+        - link "Profil saya" [ref=f1e64] [cursor=pointer]:
+          - /url: /profil
+          - text: TM
+    - main [ref=f1e65]:
+      - generic [ref=f1e66]:
+        - generic [ref=f1e67]:
+          - generic [ref=f1e68]:
+            - generic [ref=f1e69]: Akun Mahasiswa
+            - generic [ref=f1e70]: •
+            - generic [ref=f1e71]: Preferensi Kolaborasi
+          - heading "Profil Saya" [level=1] [ref=f1e72]
+          - paragraph [ref=f1e73]: Kelola data akademik, keahlian, dan portofolio untuk meningkatkan kecocokan kolaborasi proyek kampus.
+        - generic [ref=f1e74]:
+          - generic [ref=f1e75]:
+            - generic [ref=f1e76]:
+              - generic [ref=f1e77]:
+                - generic [ref=f1e78]: school
+                - generic [ref=f1e80]:
+                  - heading "Data Dasar" [level=2] [ref=f1e81]
+                  - paragraph [ref=f1e82]: Informasi identitas akademik dan alokasi waktu kamu.
+              - generic [ref=f1e83]:
+                - generic [ref=f1e84]: account_circle
+                - generic [ref=f1e87]:
+                  - generic [ref=f1e88]: Foto Profil
+                  - paragraph [ref=f1e89]: Format JPG, PNG atau WebP (Maks. 2MB)
+                  - generic [ref=f1e91] [cursor=pointer]:
+                    - generic [ref=f1e92]: photo_camera
+                    - text: Unggah Foto
+              - generic [ref=f1e93]:
+                - generic [ref=f1e94]:
+                  - generic [ref=f1e95]: Nama Lengkap
+                  - textbox "Nama Lengkap" [ref=f1e96]:
+                    - /placeholder: "Contoh: Ahmad Fauzi"
+                    - text: Tester mwtbj5dzdqcj
+                - generic [ref=f1e97]:
+                  - generic [ref=f1e98]: NIM
+                  - textbox "NIM" [ref=f1e99]:
+                    - /placeholder: "Contoh: 22010182"
+                    - text: E2EMWTBJ5DZDQCJ
+              - generic [ref=f1e100]:
+                - generic [ref=f1e101]:
+                  - generic [ref=f1e102]: Jurusan
+                  - textbox "Jurusan" [ref=f1e103]:
+                    - /placeholder: "Contoh: Teknik Informatika"
+                - generic [ref=f1e104]:
+                  - generic [ref=f1e105]: Angkatan
+                  - spinbutton "Angkatan" [ref=f1e106]
+              - generic [ref=f1e107]:
+                - generic [ref=f1e108]: Ketersediaan Waktu
+                - generic [ref=f1e109]:
+                  - generic [ref=f1e110]: schedule
+                  - textbox "Ketersediaan Waktu" [ref=f1e111]:
+                    - /placeholder: 10 - 15 jam/minggu, Fleksibel di akhir pekan
+                    - text: kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+                - generic [ref=f1e112]: Ketersediaan waktu maksimal 100 karakter
+            - generic [ref=f1e114]:
+              - generic [ref=f1e115]:
+                - generic [ref=f1e116]: auto_awesome
+                - generic [ref=f1e118]:
+                  - heading "Skill & Minat" [level=2] [ref=f1e119]
+                  - paragraph [ref=f1e120]: Tentukan kompetensi teknis dan topik proyek yang ingin kamu eksplorasi.
+              - generic [ref=f1e121]:
+                - generic [ref=f1e122]:
+                  - generic [ref=f1e123]: Skill
+                  - generic [ref=f1e124]: 0 Terpilih
+                - button "add Tambah Skill" [ref=f1e127] [cursor=pointer]:
+                  - generic [ref=f1e128]: add
+                  - text: Tambah Skill
+              - generic [ref=f1e129]:
+                - generic [ref=f1e130]:
+                  - generic [ref=f1e131]: Minat Bidang Proyek
+                  - generic [ref=f1e132]: 0 Terpilih
+                - button "add Tambah Minat" [ref=f1e135] [cursor=pointer]:
+                  - generic [ref=f1e136]: add
+                  - text: Tambah Minat
+          - button "save Simpan Profil" [active] [ref=f1e138] [cursor=pointer]:
+            - generic [ref=f1e139]: save
+            - text: Simpan Profil
+        - generic [ref=f1e140]:
+          - generic [ref=f1e141]: error
+          - generic [ref=f1e143]: Mohon periksa kembali isian formulir.
+```

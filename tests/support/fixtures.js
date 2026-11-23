@@ -91,6 +91,33 @@ const test = base.test.extend({
     await hapusUser(request, admin.token, u.email);
   },
 
+  // Pabrik akun mahasiswa terverifikasi: panggil `await mahasiswaBaru()` sebanyak yang dibutuhkan.
+  // Semua akun yang dibuat otomatis dihapus setelah tes.
+  mahasiswaBaru: async ({ request, admin }, use) => {
+    const dibuat = [];
+    await use(async () => {
+      const u = await buatUser(request, admin, { verified: true });
+      dibuat.push(u.email);
+      return u;
+    });
+    for (const email of dibuat) await hapusUser(request, admin.token, email);
+  },
+
+  // Untuk tag/kategori yang dibuat lewat UI/API: panggil trackTag(namaTag) agar ikut dibersihkan.
+  trackTag: async ({ request, admin }, use) => {
+    const daftar = [];
+    await use((nama) => daftar.push(nama));
+    for (const nama of daftar) {
+      const res = await request.get(`/api/tag?q=${encodeURIComponent(nama)}`);
+      const json = await res.json().catch(() => ({ data: [] }));
+      for (const t of json.data || []) {
+        if (t.nama_tag === nama) {
+          await request.delete(`/api/tag/${t.tag_id}`, { headers: { Authorization: `Bearer ${admin.token}` } });
+        }
+      }
+    }
+  },
+
   // Untuk akun yang dibuat lewat UI: panggil trackUser(email) agar ikut dibersihkan.
   trackUser: async ({ request, admin }, use) => {
     const daftar = [];
@@ -127,4 +154,32 @@ async function buatProyek(request, token, overrides = {}) {
   return (await res.json()).data;
 }
 
-module.exports = { test, expect, setSesi, buatProyek, apiLogin, kodeUnik, dataUserBaru };
+const auth = (token) => ({ Authorization: `Bearer ${token}` });
+
+// Membuat tag baru (khusus admin). Mengembalikan objek tag. Hapus lewat fixture trackTag.
+async function buatTag(request, admin, overrides = {}) {
+  const nama = overrides.nama_tag || `E2E Tag ${kodeUnik()}`;
+  const res = await request.post('/api/tag', {
+    headers: auth(admin.token),
+    data: { nama_tag: nama, jenis: 'skill', kategori: 'E2E', ...overrides },
+  });
+  expect(res.status(), 'Pembuatan tag via API harus 201').toBe(201);
+  return (await res.json()).data;
+}
+
+// Mahasiswa melamar ke proyek lewat API. Mengembalikan data lamaran (ada aplikasi_id).
+async function lamarProyek(request, token, proyekId, pesan = 'Saya tertarik bergabung.') {
+  const res = await request.post(`/api/proyek/${proyekId}/aplikasi`, { headers: auth(token), data: { pesan } });
+  expect(res.status(), 'Melamar via API harus 201').toBe(201);
+  return (await res.json()).data;
+}
+
+// Pemilik menerima/menolak lamaran lewat API.
+async function prosesLamaran(request, token, aplikasiId, status) {
+  return request.patch(`/api/aplikasi/${aplikasiId}`, { headers: auth(token), data: { status } });
+}
+
+module.exports = {
+  test, expect, setSesi, buatProyek, buatTag, lamarProyek, prosesLamaran,
+  apiLogin, kodeUnik, dataUserBaru, auth,
+};
