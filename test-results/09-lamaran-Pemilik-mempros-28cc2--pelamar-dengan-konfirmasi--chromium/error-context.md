@@ -14,15 +14,15 @@
 ```
 Error: expect(locator).toBeVisible() failed
 
-Locator:  getByText('Tester mwtbg36q64q3').first()
+Locator:  getByText('Tester mwuc1a0wcjk6').first()
 Expected: visible
 Received: hidden
 Timeout:  10000ms
 
 Call log:
-  - Expect "toBeVisible" getByText('Tester mwtbg36q64q3').first() with timeout 10000ms
-  - waiting for getByText('Tester mwtbg36q64q3').first()
-    18 × locator resolved to <span class="text-pill-tag text-on-surface font-bold truncate">Tester mwtbg36q64q3</span>
+  - Expect "toBeVisible" getByText('Tester mwuc1a0wcjk6').first() with timeout 10000ms
+  - waiting for getByText('Tester mwuc1a0wcjk6').first()
+    16 × locator resolved to <span class="text-pill-tag text-on-surface font-bold truncate">Tester mwuc1a0wcjk6</span>
        - unexpected value "hidden"
 
 ```
@@ -86,7 +86,7 @@ Call log:
   - textbox "Deadline Proyek"
   - button "send Publikasikan Proyek"
   - text: Buka
-  - heading "E2E Proyek mwtbg3fbkbdw" [level=3]
+  - heading "E2E Proyek mwuc1aldt37b" [level=3]
   - button "edit Edit"
   - button "lock Tutup Postingan"
   - text: "Kategori:"
@@ -96,9 +96,9 @@ Call log:
   - text: "Deadline:"
   - strong: Tanpa deadline
   - heading "Daftar Pelamar" [level=4]
-  - text: 1 Menunggu Respon TM Tester mwtbg36q64q3 - • Saya tertarik bergabung.
-  - link "Chat dengan Tester mwtbg36q64q3":
-    - /url: /chat?user=126
+  - text: 1 Menunggu Respon TM Tester mwuc1a0wcjk6 - • Saya tertarik bergabung.
+  - link "Chat dengan Tester mwuc1a0wcjk6":
+    - /url: /chat?user=465
     - text: chat
   - text: Pending
   - button "Terima"

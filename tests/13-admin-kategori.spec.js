@@ -18,8 +18,8 @@ test.describe('Kelola Kategori (tampilan)', () => {
   });
 
   test('menampilkan panel Skill dan Minat', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: 'Kategori Skill' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'Kategori Minat' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Kategori Skill', exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Kategori Minat', exact: true })).toBeVisible();
     await expect(page.getByRole('button', { name: /Tambah Skill/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Tambah Minat/ })).toBeVisible();
   });
