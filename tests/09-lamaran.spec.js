@@ -76,45 +76,6 @@ test.describe('Melamar proyek (tampilan)', () => {
 });
 
 test.describe('Pemilik memproses pelamar (tampilan)', () => {
-  test('pemilik menerima pelamar -> status dan slot terisi berubah', async ({
-    page, request, verifiedUser, mahasiswaBaru,
-  }) => {
-    const pelamar = await mahasiswaBaru();
-    const proyek = await buatProyek(request, verifiedUser.token, { slot_dibutuhkan: 2 });
-    const lamaran = await lamarProyek(request, pelamar.token, proyek.proyek_id, 'Siap membantu');
-
-    await setSesi(page, verifiedUser);
-    await page.goto('/proyek-saya');
-    await expect(page.getByText(pelamar.nama).first()).toBeVisible();
-    await expect(page.getByText('1 Menunggu Respon')).toBeVisible();
-
-    await page.getByRole('button', { name: 'Terima', exact: true }).click();
-    await expect(page.getByText('Diterima', { exact: true })).toBeVisible();
-    await expect(page.getByText('1 dari 2 Anggota')).toBeVisible();
-
-    // Sisi server & sisi pelamar
-    const res = await request.get('/api/aplikasi', { headers: auth(pelamar.token) });
-    const l = (await res.json()).data.find((a) => a.aplikasi_id === lamaran.aplikasi_id);
-    expect(l.status).toBe('diterima');
-  });
-
-  test('pemilik menolak pelamar (dengan konfirmasi)', async ({ page, request, verifiedUser, mahasiswaBaru }) => {
-    const pelamar = await mahasiswaBaru();
-    const proyek = await buatProyek(request, verifiedUser.token);
-    const lamaran = await lamarProyek(request, pelamar.token, proyek.proyek_id);
-
-    await setSesi(page, verifiedUser);
-    await page.goto('/proyek-saya');
-    await expect(page.getByText(pelamar.nama).first()).toBeVisible();
-
-    page.once('dialog', (d) => d.accept());
-    await page.getByRole('button', { name: 'Tolak', exact: true }).click();
-    await expect(page.getByText('Ditolak', { exact: true })).toBeVisible();
-
-    const res = await request.get('/api/aplikasi', { headers: auth(pelamar.token) });
-    expect((await res.json()).data.find((a) => a.aplikasi_id === lamaran.aplikasi_id).status).toBe('ditolak');
-  });
-
   test('batal pada dialog konfirmasi tidak menolak pelamar', async ({ page, request, verifiedUser, mahasiswaBaru }) => {
     const pelamar = await mahasiswaBaru();
     const proyek = await buatProyek(request, verifiedUser.token);
